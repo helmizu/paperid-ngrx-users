@@ -1,0 +1,74 @@
+<main>
+  <ng-container *ngIf="(isUsersLoading$ | async); else notLoading">
+    <p>Loading...</p>
+  </ng-container>
+
+  <ng-template #notLoading>
+    <ng-container *ngIf="(isUsersEmpty$ | async); else usersLoaded">
+      <p>None found.</p>
+    </ng-container>
+
+    <ng-template #usersLoaded>
+      <section>
+        <mat-form-field class="search-field" style="max-width: 400px; width: 100%;">
+          <mat-label>Search</mat-label>
+          <input matInput type="text" [(ngModel)]="value" (keyup.enter)="setSearchQuery()" (blur)="setSearchQuery()">
+          <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="removeSearchQuery()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-card appearance="outlined" class="mat-elevation-z8" style="overflow: auto;">
+          <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let user"> {{user.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef> Email </th>
+              <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef> Phone </th>
+              <td mat-cell *matCellDef="let user"> {{user.phone}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="website">
+              <th mat-header-cell *matHeaderCellDef> Website </th>
+              <td mat-cell *matCellDef="let user">
+                <a [attr.href]="'http://' + user.website" target="_blank" rel="noopener noreferrer">
+                  {{user.website}}
+                </a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="company">
+              <th mat-header-cell *matHeaderCellDef> Company </th>
+              <td mat-cell *matCellDef="let user"> {{user.company.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let user">
+                <a mat-stroked-button [attr.href]="'/user/' + user.id">
+                  Open Details
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card>
+      </section>
+    </ng-template>
+  </ng-template>
+</main>
